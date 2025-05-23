@@ -1,8 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
+import { Link } from 'react-router-dom';
 import ContactItem from '../contactItem/index';
 import { useAppSelector } from '../../redux/hooks';
 import { Contact } from '../../types/Contact';
-import { ListContainer, Title, SearchInput, EmptyMessage } from './styles';
+import { ListContainer, Title, SearchInput, EmptyMessage, AddContactButton } from './styles';
 
 interface ContactListProps {
   setContactToEdit: (contact: Contact | null) => void;
@@ -24,13 +25,17 @@ const ContactList: React.FC<ContactListProps> = ({ setContactToEdit }) => {
 
   return (
     <ListContainer>
-      <Title>Lista de Contatos</Title>
-      <SearchInput
-        type="text"
-        placeholder="Pesquisar contatos..."
-        value={searchTerm}
-        onChange={handleSearchChange}
-      />
+      <Title>Lista de Contatos ({contacts.length})</Title>
+
+      {contacts.length > 0 && (
+        <SearchInput
+          type="text"
+          placeholder="🔍 Pesquisar contatos por nome, email ou telefone..."
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
+      )}
+
       {filteredContacts.length > 0 ? (
         filteredContacts.map((contact: Contact) => (
           <ContactItem
@@ -41,9 +46,17 @@ const ContactList: React.FC<ContactListProps> = ({ setContactToEdit }) => {
         ))
       ) : (
         <EmptyMessage>
-          {contacts.length === 0
-            ? 'Nenhum contato adicionado ainda. Adicione um novo contato usando o formulário acima.'
-            : 'Nenhum contato encontrado para esta pesquisa.'}
+          {contacts.length === 0 ? (
+            <div>
+              <p>📋 Nenhum contato adicionado ainda.</p>
+              <p>Comece adicionando seu primeiro contato!</p>
+              <AddContactButton as={Link} to="/adicionar">
+                ➕ Adicionar Primeiro Contato
+              </AddContactButton>
+            </div>
+          ) : (
+            <p>🔍 Nenhum contato encontrado para "{searchTerm}"</p>
+          )}
         </EmptyMessage>
       )}
     </ListContainer>

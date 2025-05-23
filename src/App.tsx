@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import styled from 'styled-components';
 import store from './redux/store';
 import GlobalStyle from './styles/GlobalStyle';
 import ContactForm from './components/contactForm/index';
 import ContactList from './components/contactList/index';
+import Navigation from './components/navigation/index';
 import { Contact } from './types/Contact';
 
 const AppContainer = styled.div`
@@ -35,18 +37,41 @@ const App: React.FC = () => {
   return (
     <Provider store={store}>
       <GlobalStyle />
-      <AppContainer>
-        <Header>
-          <Title>Gerenciador de Contatos</Title>
-          <Subtitle>Adicione, edite e remova seus contatos</Subtitle>
-        </Header>
+      <Router>
+        <AppContainer>
+          <Header>
+            <Title>Gerenciador de Contatos</Title>
+            <Subtitle>Adicione, edite e remova seus contatos</Subtitle>
+          </Header>
 
-        <ContactForm
-          contactToEdit={contactToEdit}
-          setContactToEdit={setContactToEdit}
-        />
-        <ContactList setContactToEdit={setContactToEdit} />
-      </AppContainer>
+          <Navigation />
+
+          <Routes>
+            <Route
+              path="/"
+              element={<ContactList setContactToEdit={setContactToEdit} />}
+            />
+            <Route
+              path="/adicionar"
+              element={
+                <ContactForm
+                  contactToEdit={contactToEdit}
+                  setContactToEdit={setContactToEdit}
+                />
+              }
+            />
+            <Route
+              path="/editar"
+              element={
+                <ContactForm
+                  contactToEdit={contactToEdit}
+                  setContactToEdit={setContactToEdit}
+                />
+              }
+            />
+          </Routes>
+        </AppContainer>
+      </Router>
     </Provider>
   );
 };

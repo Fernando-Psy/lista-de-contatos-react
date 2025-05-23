@@ -13,6 +13,7 @@ import {
     ButtonGroup,
     Button
 } from './styles';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 
@@ -28,15 +29,22 @@ const ContactForm: React.FC<ContactFormProps> = ({ contactToEdit, setContactToEd
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
-        if (contactToEdit) {
+        if (contactToEdit && location.pathname === '/editar') {
             setName(contactToEdit.name);
             setEmail(contactToEdit.email);
             setPhone(contactToEdit.phone);
             setIsEditing(true);
+        } else if (location.pathname === '/adicionar') {
+            setName('');
+            setEmail('');
+            setPhone('');
+            setIsEditing(false);
         }
-    }, [contactToEdit]);
+    }, [contactToEdit, location.pathname]);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
@@ -59,6 +67,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ contactToEdit, setContactToEd
         setName('');
         setEmail('');
         setPhone('');
+        navigate('/');
     };
 
     const handleCancel = (): void => {
@@ -67,6 +76,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ contactToEdit, setContactToEd
         setPhone('');
         setIsEditing(false);
         setContactToEdit(null);
+        navigate('/');
     };
 
     return (
@@ -80,6 +90,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ contactToEdit, setContactToEd
                         id="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        placeholder='Digite o nome completo'
                     />
                 </InputGroup>
                 <InputGroup>
@@ -89,6 +100,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ contactToEdit, setContactToEd
                         id="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        placeholder='Digite o email'
                     />
                 </InputGroup>
                 <InputGroup>
@@ -98,15 +110,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ contactToEdit, setContactToEd
                         id="phone"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
+                        placeholder='Digite o telefone'
                     />
                 </InputGroup>
                 <ButtonGroup>
                     <Button type="submit">{isEditing ? 'Salvar' : 'Adicionar'}</Button>
-                    {isEditing && (
-                        <Button type="button" onClick={handleCancel}>
-                            Cancelar
-                        </Button>
-                    )}
+                    <Button type="button" onClick={handleCancel} secondary>Cancelar</Button>
                 </ButtonGroup>
             </Form>
         </FormContainer>
