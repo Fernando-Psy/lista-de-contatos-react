@@ -3,6 +3,7 @@ import { deleteContact } from '../../redux/contactsSlice';
 import { Button, ButtonGroup, ContactCard, ContactDetail, ContactInfo, ContactName } from './styles';
 import { Contact } from '../../types/Contact';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 interface ContactItemProps {
@@ -12,6 +13,7 @@ interface ContactItemProps {
 
 const ContactItem: React.FC<ContactItemProps> = ({ contact, onEdit }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleDelete = (): void => {
         if (
@@ -23,6 +25,11 @@ const ContactItem: React.FC<ContactItemProps> = ({ contact, onEdit }) => {
         }
     };
 
+    const handleEdit = (): void => {
+        onEdit(contact);
+        navigate('/editar');
+    };
+
     return (
         <ContactCard>
             <ContactInfo>
@@ -31,11 +38,11 @@ const ContactItem: React.FC<ContactItemProps> = ({ contact, onEdit }) => {
                 <ContactDetail icon="📞">{contact.phone}</ContactDetail>
             </ContactInfo>
             <ButtonGroup>
-                <Button edit onClick={() => onEdit(contact)}>
-                    Editar
+                <Button edit onClick={handleEdit}>
+                    ✏️ Editar
                 </Button>
                 <Button delete onClick={handleDelete}>
-                    Excluir
+                    🗑️ Excluir
                 </Button>
             </ButtonGroup>
         </ContactCard>
