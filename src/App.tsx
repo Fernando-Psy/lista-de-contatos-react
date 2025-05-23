@@ -3,8 +3,9 @@ import { Provider } from 'react-redux';
 import styled from 'styled-components';
 import store from './redux/store';
 import GlobalStyle from './styles/GlobalStyle';
-import ContactForm from './components/ContactForm';
-import ContactList from './components/ContactList';
+import ContactForm from './components/contactForm/index';
+import ContactList from './components/contactList/index';
+import { Contact } from './types/Contact';
 
 const AppContainer = styled.div`
   max-width: 800px;
@@ -28,8 +29,8 @@ const Subtitle = styled.p`
   font-size: 1.1rem;
 `;
 
-function App() {
-  const [contactToEdit, setContactToEdit] = useState(null);
+const App: React.FC = () => {
+  const [contactToEdit, setContactToEdit] = useState<Contact | null>(null);
 
   return (
     <Provider store={store}>
@@ -48,6 +49,6 @@ function App() {
       </AppContainer>
     </Provider>
   );
-}
+};
 
 export default App;
