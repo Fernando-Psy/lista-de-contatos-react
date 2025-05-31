@@ -29,6 +29,7 @@ const ContactList: React.FC<ContactListProps> = ({ setContactToEdit }) => {
 
       {contacts.length > 0 && (
         <SearchInput
+          data-cy="search-input"
           type="text"
           placeholder="🔍 Pesquisar contatos por nome, email ou telefone..."
           value={searchTerm}
@@ -45,7 +46,7 @@ const ContactList: React.FC<ContactListProps> = ({ setContactToEdit }) => {
           />
         ))
       ) : (
-        <EmptyMessage>
+        <EmptyMessage data-cy="empty-message">
           {contacts.length === 0 ? (
             <div>
               <p>📋 Nenhum contato adicionado ainda.</p>
