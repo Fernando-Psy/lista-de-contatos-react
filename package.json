@@ -24,7 +24,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "start-server-and-test start http://localhost:3000 cypress:run",
+    "test:e2e:open": "start-server-and-test start http://localhost:3000 cypress:open"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +53,8 @@
     "@types/react-dom": "^19.1.5",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.34",
+    "cypress": "^14.4.0",
+    "start-server-and-test": "^2.0.12",
     "typescript": "^4.9.5"
   }
 }
