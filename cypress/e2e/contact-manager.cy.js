@@ -1,8 +1,5 @@
-// cypress/e2e/contact-manager.cy.js
-
 describe('Gerenciador de Contatos', () => {
     beforeEach(() => {
-        // Visita a página inicial antes de cada teste
         cy.visit('http://localhost:3000');
     });
 
@@ -33,21 +30,16 @@ describe('Gerenciador de Contatos', () => {
         });
 
         it('deve adicionar um novo contato com sucesso', () => {
-            // Navegar para página de adição
             cy.get('nav a').contains('Adicionar Contato').click();
 
-            // Preencher formulário
             cy.get('#name').type('João Silva');
             cy.get('#email').type('joao@example.com');
             cy.get('#phone').type('(11) 99999-9999');
 
-            // Submeter formulário
             cy.get('button[type="submit"]').click();
 
-            // Verificar se foi redirecionado para lista
             cy.url().should('eq', 'http://localhost:3000/');
 
-            // Verificar se o contato foi adicionado
             cy.get('[data-cy="contact-item"]').should('have.length', 1);
             cy.get('[data-cy="contact-name"]').should('contain.text', 'João Silva');
             cy.get('[data-cy="contact-email"]').should('contain.text', 'joao@example.com');
@@ -57,10 +49,8 @@ describe('Gerenciador de Contatos', () => {
         it('deve exibir alerta quando campos obrigatórios não são preenchidos', () => {
             cy.get('nav a').contains('Adicionar Contato').click();
 
-            // Tentar submeter sem preencher campos
             cy.get('button[type="submit"]').click();
 
-            // Verificar se alerta é exibido (stub window.alert)
             cy.window().then((win) => {
                 cy.stub(win, 'alert').as('windowAlert');
             });
@@ -72,22 +62,18 @@ describe('Gerenciador de Contatos', () => {
         it('deve limpar formulário ao cancelar', () => {
             cy.get('nav a').contains('Adicionar Contato').click();
 
-            // Preencher campos
             cy.get('#name').type('Teste');
             cy.get('#email').type('teste@test.com');
             cy.get('#phone').type('123456789');
 
-            // Cancelar
             cy.get('button').contains('Cancelar').click();
 
-            // Verificar se foi redirecionado
             cy.url().should('eq', 'http://localhost:3000/');
         });
     });
 
     describe('Listagem e Busca de Contatos', () => {
         beforeEach(() => {
-            // Adicionar alguns contatos para teste
             cy.addContact('João Silva', 'joao@example.com', '(11) 99999-9999');
             cy.addContact('Maria Santos', 'maria@example.com', '(11) 88888-8888');
             cy.addContact('Pedro Costa', 'pedro@example.com', '(11) 77777-7777');
@@ -143,15 +129,12 @@ describe('Gerenciador de Contatos', () => {
         it('deve editar contato com sucesso', () => {
             cy.get('[data-cy="edit-button"]').click();
 
-            // Editar dados
             cy.get('#name').clear().type('João Silva Editado');
             cy.get('#email').clear().type('joao.editado@example.com');
             cy.get('#phone').clear().type('(11) 11111-1111');
 
-            // Salvar
             cy.get('button[type="submit"]').click();
 
-            // Verificar se foi redirecionado e dados foram atualizados
             cy.url().should('eq', 'http://localhost:3000/');
             cy.get('[data-cy="contact-name"]').should('contain.text', 'João Silva Editado');
             cy.get('[data-cy="contact-email"]').should('contain.text', 'joao.editado@example.com');
@@ -161,13 +144,10 @@ describe('Gerenciador de Contatos', () => {
         it('deve cancelar edição e voltar para lista', () => {
             cy.get('[data-cy="edit-button"]').click();
 
-            // Fazer alterações
             cy.get('#name').clear().type('Nome Alterado');
 
-            // Cancelar
             cy.get('button').contains('Cancelar').click();
 
-            // Verificar se voltou para lista e dados não foram alterados
             cy.url().should('eq', 'http://localhost:3000/');
             cy.get('[data-cy="contact-name"]').should('contain.text', 'João Silva');
         });
@@ -179,7 +159,6 @@ describe('Gerenciador de Contatos', () => {
         });
 
         it('deve exibir confirmação ao tentar excluir contato', () => {
-            // Stub window.confirm
             cy.window().then((win) => {
                 cy.stub(win, 'confirm').returns(false).as('confirmDialog');
             });
@@ -189,27 +168,23 @@ describe('Gerenciador de Contatos', () => {
         });
 
         it('deve excluir contato quando confirmado', () => {
-            // Stub window.confirm para retornar true
             cy.window().then((win) => {
                 cy.stub(win, 'confirm').returns(true);
             });
 
             cy.get('[data-cy="delete-button"]').click();
 
-            // Verificar se contato foi removido
             cy.get('[data-cy="contact-item"]').should('not.exist');
             cy.get('[data-cy="empty-message"]').should('contain.text', 'Nenhum contato adicionado ainda');
         });
 
         it('não deve excluir contato quando cancelado', () => {
-            // Stub window.confirm para retornar false
             cy.window().then((win) => {
                 cy.stub(win, 'confirm').returns(false);
             });
 
             cy.get('[data-cy="delete-button"]').click();
 
-            // Verificar se contato ainda existe
             cy.get('[data-cy="contact-item"]').should('exist');
             cy.get('[data-cy="contact-name"]').should('contain.text', 'João Silva');
         });
@@ -217,30 +192,24 @@ describe('Gerenciador de Contatos', () => {
 
     describe('Navegação', () => {
         it('deve navegar entre páginas usando os links de navegação', () => {
-            // Página inicial
             cy.url().should('eq', 'http://localhost:3000/');
 
-            // Ir para adicionar
             cy.get('nav a').contains('Adicionar Contato').click();
             cy.url().should('include', '/adicionar');
 
-            // Voltar para lista
             cy.get('nav a').contains('Lista de Contatos').click();
             cy.url().should('eq', 'http://localhost:3000/');
         });
 
         it('deve destacar link ativo na navegação', () => {
-            // Na página inicial, link da lista deve estar ativo
             cy.get('nav a').contains('Lista de Contatos').should('have.css', 'background-color', 'rgb(21, 171, 146)');
 
-            // Navegar para adicionar
             cy.get('nav a').contains('Adicionar Contato').click();
             cy.get('nav a').contains('Adicionar Contato').should('have.css', 'background-color', 'rgb(21, 171, 146)');
         });
     });
 });
 
-// Comandos customizados do Cypress
 Cypress.Commands.add('addContact', (name, email, phone) => {
     cy.get('nav a').contains('Adicionar Contato').click();
     cy.get('#name').type(name);
