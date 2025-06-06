@@ -5,27 +5,22 @@ describe('Navegação da Aplicação', () => {
 
     describe('Navegação Básica', () => {
         it('deve navegar corretamente entre páginas', () => {
-            // Página inicial
             cy.url().should('eq', Cypress.config('baseUrl') + '/');
             cy.get('h1').should('contain', 'Gerenciador de Contatos');
 
-            // Navegar para adicionar
             cy.get('nav a').contains('Adicionar Contato').click();
             cy.url().should('include', '/adicionar');
             cy.get('h2').should('contain', 'Adicionar Contato');
 
-            // Voltar para lista
             cy.get('nav a').contains('Lista de Contatos').click();
             cy.url().should('eq', Cypress.config('baseUrl') + '/');
         });
 
         it('deve destacar página ativa na navegação', () => {
-            // Lista ativa
             cy.get('nav a').contains('Lista de Contatos')
                 .should('have.css', 'background-color')
                 .and('not.equal', 'rgba(0, 0, 0, 0)');
 
-            // Navegar para adicionar
             cy.get('nav a').contains('Adicionar Contato').click();
             cy.get('nav a').contains('Adicionar Contato')
                 .should('have.css', 'background-color')
@@ -53,7 +48,6 @@ describe('Navegação da Aplicação', () => {
 
             cy.get('button').contains('Cancelar').click();
 
-            // Tentar editar novamente - deve ter valor original
             cy.get('[data-cy="edit-button"]').click();
             cy.get('#name').should('have.value', 'Teste Cancelar');
         });
